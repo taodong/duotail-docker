@@ -1,0 +1,24 @@
+# This file lists plugins that Haraka will run
+
+# HELO
+helo.checks
+mailauth
+
+# MAIL FROM
+# Only accept mail where the MAIL FROM domain is resolvable to an MX record
+# mail_from.is_resolvable
+#spf
+
+# RCPT TO
+# At least one rcpt_to plugin is REQUIRED for inbound email. The simplest
+# plugin is in_host_list, see 'haraka -h rcpt_to.in_host_list' to configure.
+rcpt_to.in_host_list
+
+# DATA
+headers
+
+# QUEUE
+duotail
+queue/discard
+
+
