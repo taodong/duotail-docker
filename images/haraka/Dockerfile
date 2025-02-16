@@ -18,10 +18,19 @@ COPY config/smtp.ini /haraka-duotail/config/smtp.ini
 # Install dependencies
 RUN cd /haraka-duotail && npm install
 
+# Install supervisord
+RUN apt-get update && apt-get install -y supervisor
+
 EXPOSE ${LISTEN_PORT}
 
 # Configure and RUN Haraka as service
 RUN mkdir -p /var/log/haraka
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY healthcheck.sh /healthcheck.sh
+RUN chmod +x /healthcheck.sh
+
+# Add health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD /healthcheck.sh || exit 1
 
 CMD ["/usr/bin/supervisord"]
