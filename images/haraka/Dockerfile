@@ -18,6 +18,9 @@ COPY config/smtp.ini /haraka-duotail/config/smtp.ini
 # Install dependencies
 RUN cd /haraka-duotail && npm install
 
+# Copy duotail plugin to plugins directory
+RUN cp -r /haraka-duotail/node_modules/@tao.dong/haraka-plugin-duotail /haraka-duotail/plugins/duotail
+
 # Install supervisord
 RUN apt-get update && apt-get install -y supervisor
 
@@ -30,7 +33,7 @@ COPY healthcheck.sh /healthcheck.sh
 RUN chmod +x /healthcheck.sh
 
 # Add health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
   CMD /healthcheck.sh || exit 1
 
 CMD ["/usr/bin/supervisord"]
