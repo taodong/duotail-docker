@@ -27,7 +27,7 @@ RUN cp -r /haraka-duotail/node_modules/@tao.dong/haraka-plugin-duotail /haraka-d
 RUN apt-get update && apt-get install -y supervisor
 
 EXPOSE ${LISTEN_PORT}
-EXPOSE 8080
+EXPOSE 8090
 
 # Configure and RUN Haraka as service
 RUN mkdir -p /var/log/haraka
@@ -38,6 +38,6 @@ RUN chmod +x /healthcheck.sh
 # Add health check endpoint
 COPY health_server.js /health_server.js
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-  CMD curl -f http://localhost:8080/health || exit 1
+  CMD curl -f http://localhost:8090/health || exit 1
 
 CMD ["/usr/bin/supervisord"]

@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const { exec } = require('child_process');
 
-const port = 8080;
+const port = 8090;
 
 const requestHandler = (req, res) => {
   if (req.url === '/health') {
