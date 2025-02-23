@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# This script accepts two arguments:
+# This script accepts three arguments:
 # 1. the product name, which is the name of the directory containing the Dockerfile
-# 2. The tag of the image to build (default: latest) using the -t flag
-# 3. If the image is build for mac using the --mac flag
+# 2. [optional] The tag of the image to build (default: latest) using the -t flag
+# 3. [optional]  If the image is build for mac using the --mac flag
 # Example usage:
-# ./image-build.sh <product> -t 1.0.0 --mac
+# ./image-build.sh haraka -t 1.0.0 --mac
 # If no platform is provided, the default platform is linux/amd64, otherwise the platform is linux/arm64
 # The default image tag is latest if no tag is provided, however if the platform is mac, the default tag is latest-mac
 # Same logic applies when tag is provided, 1.0.0-mac will be used if the platform is mac
