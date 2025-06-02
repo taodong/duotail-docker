@@ -1,14 +1,14 @@
 #!/bin/bash
 set -e
 
-# Create a system user for SMTP authentication (via saslauthd using PAM)
-if id "${POSTFIX_USERNAME}" &>/dev/null; then
-  echo "User ${POSTFIX_USERNAME} already exists"
-else
-  useradd -m -s /usr/sbin/nologin "${POSTFIX_USERNAME}"
-  echo "${POSTFIX_USERNAME}:${POSTFIX_PASSWORD}" | chpasswd
-  echo "Created user ${POSTFIX_USERNAME}"
-fi
+# Create SASL user
+echo "$POSTFIX_PASSWORD" | saslpasswd2 -c -p -u "$POSTFIX_DOMAIN" "$POSTFIX_USERNAME"
+chown root:sasl /etc/sasldb2
+
+mkdir -p /var/spool/postfix/etc/
+cp /etc/sasldb2 /var/spool/postfix/etc/
+chown postfix:sasl /var/spool/postfix/etc/sasldb2
+chmod 660 /var/spool/postfix/etc/sasldb2
 
 # Start supervisord
 exec /usr/bin/supervisord

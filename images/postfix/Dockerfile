@@ -20,18 +20,12 @@ RUN echo "test@exmaple.com test@example.com" >> /etc/postfix/virtual && \
     postmap /etc/postfix/virtual
 
 # Install cyrus-sasl2 for SMTP authentication
-RUN apt-get install -y sasl2-bin libsasl2-modules
+RUN apt-get update && \
+    apt-get install -y sasl2-bin libsasl2-modules
 
-# Configure SASL authentication
-RUN mkdir -p /etc/postfix/sasl && \
-    mkdir -p /var/spool/postfix/var/run/saslauthd && \
-    ln -s /var/spool/postfix/var/run/saslauthd /var/run/saslauthd
-
+RUN mkdir -p /etc/postfix/sasl
 COPY config/smtpd.conf /etc/postfix/sasl/smtpd.conf
-COPY config/saslauthd /etc/default/saslauthd
 
-# Add postfix user to sasl group
-RUN adduser postfix sasl
 
 # Enable and run saslauthd via supervisord
 RUN mkdir -p /etc/supervisor/conf.d
