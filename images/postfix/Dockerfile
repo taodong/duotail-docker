@@ -26,11 +26,6 @@ RUN apt-get update && \
 RUN mkdir -p /etc/postfix/sasl
 COPY config/smtpd.conf /etc/postfix/sasl/smtpd.conf
 
-
-# Enable and run saslauthd via supervisord
-RUN mkdir -p /etc/supervisor/conf.d
-COPY config/saslauthd.conf /etc/supervisor/conf.d/saslauthd.conf
-
 # Enable StartTLS
 COPY config/master.cf /etc/postfix/master.cf
 

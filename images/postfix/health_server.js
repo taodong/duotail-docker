@@ -7,18 +7,20 @@ const requestHandler = (req, res) => {
   if (req.url === '/health') {
 
     exec('service postfix status', (error, stdout, stderr)  => {
+        const output = stdout + stderr;
+
         if (error) {
             res.writeHead(500, { 'Content-Type': 'text/plain' });
             res.end('Error reading health status');
             return;
         }
 
-        if (stdout.includes('running')) {
+        if (output.includes('running')) {
             res.writeHead(200, { 'Content-Type': 'text/plain' });
             res.end('OK');
         } else {
             res.writeHead(503, { 'Content-Type': 'text/plain' });
-            res.end('Service Unavailable');
+            res.end(output || 'Unknow service status');
         }
     });
 
