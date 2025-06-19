@@ -29,6 +29,12 @@ COPY config/smtpd.conf /etc/postfix/sasl/smtpd.conf
 # Enable StartTLS
 COPY config/master.cf /etc/postfix/master.cf
 
+# Install OpenDKIM
+RUN apt-get update && \
+    apt-get install -y opendkim opendkim-tools
+
+RUN mkdir -p /etc/opendkim/keys
+
 # Install supervisord
 RUN apt-get update && apt-get install -y supervisor
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf

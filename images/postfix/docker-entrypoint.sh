@@ -10,5 +10,11 @@ cp /etc/sasldb2 /var/spool/postfix/etc/
 chown postfix:sasl /var/spool/postfix/etc/sasldb2
 chmod 660 /var/spool/postfix/etc/sasldb2
 
+# Config opendkim socket for postfix
+mkdir -p /var/spool/postfix/opendkim
+chown postfix:opendkim /var/spool/postfix/opendkim
+chmod 770 /var/spool/postfix/opendkim
+usermod -aG opendkim postfix
+
 # Start supervisord
 exec /usr/bin/supervisord
