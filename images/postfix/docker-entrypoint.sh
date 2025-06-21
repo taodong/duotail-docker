@@ -16,5 +16,10 @@ chown postfix:opendkim /var/spool/postfix/opendkim
 chmod 770 /var/spool/postfix/opendkim
 usermod -aG opendkim postfix
 
+# Update file permissions for opendkim private keys when existing
+if [ -d /etc/opendkim/keys ]; then
+    find /etc/opendkim/keys -name '*.private' -exec chown opendkim:opendkim {} + -exec chmod 600 {} +
+fi
+
 # Start supervisord
 exec /usr/bin/supervisord
