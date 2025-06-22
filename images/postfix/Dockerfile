@@ -3,6 +3,11 @@ FROM ubuntu:25.10
 ARG SMTP_DOMAIN=example.com
 ARG SMTP_PORT=25
 
+# Install Syslog
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends rsyslog && \
+    rm -rf /var/lib/apt/lists/*
+
 # Install Postfix
 RUN apt-get update && \
     apt-get install -y mailutils && \

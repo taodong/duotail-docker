@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e
 
+# Start rsyslog
+# Disable imklog to avoid /proc/kmsg error in containers
+sed -i '/^module(load="imklog"/s/^/#/' /etc/rsyslog.conf
+echo "Starting rsyslog..."
+rsyslogd
+
 # Create SASL user
 echo "$POSTFIX_PASSWORD" | saslpasswd2 -c -p -u "$POSTFIX_DOMAIN" "$POSTFIX_USERNAME"
 chown root:sasl /etc/sasldb2
