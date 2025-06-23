@@ -27,5 +27,9 @@ if [ -d /etc/opendkim/keys ]; then
     find /etc/opendkim/keys -name '*.private' -exec chown opendkim:opendkim {} + -exec chmod 600 {} +
 fi
 
+if [ "$DEBUG_MODE" = "true" ]; then
+  sed -i '/^command=\/usr\/sbin\/opendkim -f -x \/etc\/opendkim.conf$/s|$| -vvv|' /etc/supervisor/conf.d/supervisord.conf
+fi
+
 # Start supervisord
 exec /usr/bin/supervisord

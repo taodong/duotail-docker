@@ -2,6 +2,7 @@ FROM ubuntu:25.10
 
 ARG SMTP_DOMAIN=example.com
 ARG SMTP_PORT=25
+ARG DEBUG_MODE=false
 
 # Install Syslog
 RUN apt-get update && \
@@ -44,9 +45,6 @@ RUN mkdir -p /etc/opendkim/keys
 RUN apt-get update && apt-get install -y supervisor
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Clean up apt cache
-RUN rm -rf /var/lib/apt/lists/*
-
 EXPOSE ${SMTP_PORT}
 EXPOSE 587
 EXPOSE 8080
@@ -60,6 +58,20 @@ RUN apt-get install -y nodejs
 COPY health_server.js /health_server.js
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
   CMD curl -f http://localhost:8080/health || exit 1
+
+# Enable Debug Mode
+COPY debug/swaks /tmp/swaks
+
+RUN if [ "$DEBUG_MODE" = "true" ]; then \
+      apt-get update && \
+      apt-get install -y libnet-ssleay-perl && \
+      cp /tmp/swaks /usr/local/bin/swaks && \
+      chmod +x /usr/local/bin/swaks; \
+    fi
+
+
+# Clean up apt cache
+RUN rm -rf /var/lib/apt/lists/*
 
 # Update the entrypoint to use supervisord
 COPY docker-entrypoint.sh /usr/bin/docker-entrypoint.sh
