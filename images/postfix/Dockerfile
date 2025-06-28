@@ -40,6 +40,7 @@ RUN apt-get update && \
     apt-get install -y opendkim opendkim-tools
 
 RUN mkdir -p /etc/opendkim/keys
+RUN mkdir -p /var/secrets
 
 # Install supervisord
 RUN apt-get update && apt-get install -y supervisor

@@ -22,9 +22,13 @@ chown postfix:opendkim /var/spool/postfix/opendkim
 chmod 770 /var/spool/postfix/opendkim
 usermod -aG opendkim postfix
 
-# Update file permissions for opendkim private keys when existing
-if [ -d /etc/opendkim/keys ]; then
-    find /etc/opendkim/keys -name '*.private' -exec chown opendkim:opendkim {} + -exec chmod 400 {} +
+# If there is file /var/secrets/dkim.pem, copy it to /etc/opendkim/keys/${DKIM_DOMAIN}/${DKIM_SELECTOR}.private and create the directory if it does not exist
+# Update file permissions for the private key to be owned by opendkim user and group, and set permissions to 400
+if [ -f /var/secrets/dkim.pem ]; then
+    mkdir -p /etc/opendkim/keys/${DKIM_DOMAIN}
+    cp /var/secrets/dkim.pem /etc/opendkim/keys/${DKIM_DOMAIN}/${DKIM_SELECTOR}.private
+    chown opendkim:opendkim /etc/opendkim/keys/${DKIM_DOMAIN}/${DKIM_SELECTOR}.private
+    chmod 400 /etc/opendkim/keys/${DKIM_DOMAIN}/${DKIM_SELECTOR}.private
 fi
 
 if [ "$DEBUG_MODE" = "true" ]; then
