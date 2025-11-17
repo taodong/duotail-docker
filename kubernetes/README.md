@@ -34,46 +34,112 @@ Context names are derived from the directory structure under the KUBE_CONFIG_VAU
 
 ## kube-download
 
-This script downloads a file of given path from a Kubernetes pod(s) to the local machine.
-If the file is `/var/log/abc.log` and the pod name is `app-12345`, the file will be downloaded to `app-12345-abc.log` in the current directory.
+This script downloads a file of a given path from Kubernetes pod(s) to the local machine. If the file is `/var/log/abc.log` and the pod name is `app-12345`, the file will be downloaded to `app-12345-abc.log` in the current directory. If the user specifies an output file path (e.g., `/abc/app.log`), the pod name will be prepended at the file level, resulting in `/abc/app-12345-app.log`.
 
-** Pre-requisites:**
+**Pre-requisites:**
 
-It requires a `gtimeout` to be installed on the local machine. For macOS, you can install it using Homebrew:
+It requires `gtimeout` to be installed on the local machine. For macOS, you can install it using Homebrew:
 ```bash
 brew install coreutils
 ```
 
 **Constraints:**
 
-- For each pod the download will timeout after 5 minutes.
+- For each pod, the download will timeout after 5 minutes.
 
 ### Usage
 
 ```bash
-./kube-download.sh <POD_PREFIX> <FILE_PATH> [NAMESPACE]
+./kube-download.sh [-n namespace] [-o output_file] <pod_prefix> <file_path>
 ```
 
-- **POD_PREFIX**: The prefix of the pod name to match. It can be a substring of the pod name.
-- **FILE_PATH**: The path of the file to download from the pod(s).
-- **NAMESPACE**: The namespace of the pod(s). If not provided, it defaults to "default".
+- **pod_prefix**: The prefix of the pod name to match. It can be a substring of the pod name.
+- **file_path**: The path of the file to download from the pod(s).
+- **namespace**: The namespace of the pod(s). If not provided, it defaults to "default".
+- **output_file**: The local file path where the downloaded file will be saved. The pod name will be prepended at the file level.
 
 ### Examples
 
 ```bash
-./kube-download.sh postfix /var/log/postfix/mail.log
+./kube-download.sh -n default -o /abc/app.log postfix /var/log/postfix/mail.log
 ```
+
+This will download the file to `/abc/postfix-<pod_name>-app.log`.
 
 ```bash
 ./kube-download.sh collector /var/log/collector/app.log default
 ```
 
-## helm-clean
+This will download the file to `collector-<pod_name>-app.log` in the current directory.
 
-This script is used to clean up failed Helm releases in a Kubernetes cluster.
+## kube-log-pull
+
+This script downloads multiple log files from Kubernetes pods based on a JSON configuration file. It processes each log entry in the JSON file, skipping logs where `download` is set to `false` and downloading logs where `download` is `true`.
+
+**Pre-requisites:**
+
+- The script requires `jq` to parse the JSON file. Install it using your package manager (e.g., `brew install jq` on macOS).
+
+### JSON Configuration
+
+The JSON file should have the following structure:
+
+```json
+{
+  "output-folder": "target/logs",
+  "logs": [
+    {
+      "download": true,
+      "name": "example",
+      "pod-selector": "example-",
+      "namespace": "default",
+      "files": ["/var/log/example/app.log"]
+    }
+  ]
+}
+```
+
+- **output-folder**: The base folder where logs will be saved.
+- **logs**: An array of log configurations.
+  - **download**: Whether to download the logs (`true` or `false`).
+  - **name**: A name for the log group.
+  - **pod-selector**: The prefix of the pod name to match.
+  - **namespace**: The namespace of the pods.
+  - **files**: A list of file paths to download from the pods.
 
 ### Usage
 
 ```bash
-./helm-clean.sh
+./kube-log-pull.sh [path/to/log-files.json]
+```
+
+- If no JSON file is provided, the script defaults to `log-files.json` in the current directory.
+
+### Examples
+
+```bash
+./kube-log-pull.sh /path/to/log-files.json
+```
+
+This will download the logs specified in the JSON file to the `output-folder`, organizing them by log group and pod name.
+
+For example, if the JSON specifies:
+```json
+{
+  "output-folder": "target/logs",
+  "logs": [
+    {
+      "download": true,
+      "name": "manager",
+      "pod-selector": "manager-",
+      "namespace": "default",
+      "files": ["/var/log/manager/app.log"]
+    }
+  ]
+}
+```
+
+The downloaded file will be saved as:
+```
+target/logs/manager/<pod_name>-app.log
 ```
