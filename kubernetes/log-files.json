@@ -1,0 +1,39 @@
+{
+  "output-folder": "target/logs",
+  "logs": [
+    {
+      "download": false,
+      "name": "collector",
+      "pod-selector": "collector-",
+      "namespace": "default",
+      "files": ["/var/log/manager/app.log"]
+    },
+    {
+      "download": true,
+      "name": "manager",
+      "pod-selector": "manager-",
+      "namespace": "default",
+      "files": ["/var/log/manager/app.log"]
+    },
+    {
+      "download": true,
+      "name": "haraka",
+      "pod-selector": "haraka-",
+      "namespace": "default",
+      "files": ["/var/log/haraka/out.log", "/var/log/haraka/err.log"]
+    },
+    {
+      "download": true,
+      "name": "postfix",
+      "pod-selector": "postfix-",
+      "namespace": "default",
+      "files": [
+        "/var/log/postfix/mail.log",
+        "/var/log/postfix/err.log",
+        "/var/log/postfix/out.log",
+        "/var/log/postfix/opendkim.out.log",
+        "/var/log/postfix/opendkim.err.log"
+      ]
+    }
+  ]
+}
