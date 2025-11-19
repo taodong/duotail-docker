@@ -6,6 +6,11 @@ ARG LISTEN_PORT=25
 # Set environment variable
 ENV YES_REALLY_DO_DISCARD=true
 
+# Remove libwmf and dev package to avoid AGPL-3 license issues
+RUN apt-get update && \
+    apt-get remove -y libwmf-dev libwmf0.2-7 libwmflite-0.2-7 && \
+    apt-get autoremove -y
+
 # Install Haraka
 RUN npm install -g Haraka@${HARAKA_VERSION}
 
