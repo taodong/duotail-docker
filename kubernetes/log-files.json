@@ -2,11 +2,11 @@
   "output-folder": "target/logs",
   "logs": [
     {
-      "download": false,
+      "download": true,
       "name": "collector",
       "pod-selector": "collector-",
       "namespace": "default",
-      "files": ["/var/log/manager/app.log"]
+      "files": ["/var/log/collector/app.log"]
     },
     {
       "download": true,
@@ -28,11 +28,19 @@
       "pod-selector": "postfix-",
       "namespace": "default",
       "files": [
-        "/var/log/postfix/mail.log",
         "/var/log/postfix/err.log",
         "/var/log/postfix/out.log",
         "/var/log/postfix/opendkim.out.log",
         "/var/log/postfix/opendkim.err.log"
+      ]
+    },
+    {
+      "download": false,
+      "name": "postfix",
+      "pod-selector": "postfix-",
+      "namespace": "default",
+      "files": [
+        "/var/log/postfix/mail.log"
       ]
     }
   ]
