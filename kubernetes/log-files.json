@@ -9,7 +9,7 @@
       "files": ["/var/log/collector/app.log"]
     },
     {
-      "download": true,
+      "download": false,
       "name": "manager",
       "pod-selector": "manager-",
       "namespace": "default",
@@ -23,7 +23,7 @@
       "files": ["/var/log/haraka/out.log", "/var/log/haraka/err.log"]
     },
     {
-      "download": true,
+      "download": false,
       "name": "postfix",
       "pod-selector": "postfix-",
       "namespace": "default",

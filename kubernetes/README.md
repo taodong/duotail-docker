@@ -143,3 +143,7 @@ The downloaded file will be saved as:
 ```
 target/logs/manager/<pod_name>-app.log
 ```
+
+### Notes
+There is a bug in the script when the remote file is simultaneously written while being downloaded, the download process will hang. 
+A typical case is mail.log file in postfix server. 
