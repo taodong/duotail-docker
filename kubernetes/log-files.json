@@ -2,14 +2,14 @@
   "output-folder": "target/logs",
   "logs": [
     {
-      "download": true,
+      "download": false,
       "name": "collector",
       "pod-selector": "collector-",
       "namespace": "default",
       "files": ["/var/log/collector/app.log"]
     },
     {
-      "download": false,
+      "download": true,
       "name": "manager",
       "pod-selector": "manager-",
       "namespace": "default",
@@ -35,7 +35,7 @@
       ]
     },
     {
-      "download": true,
+      "download": false,
       "name": "postfix",
       "pod-selector": "postfix-",
       "namespace": "default",
