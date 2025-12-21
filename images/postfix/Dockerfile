@@ -42,9 +42,16 @@ RUN apt-get update && \
 RUN mkdir -p /etc/opendkim/keys
 RUN mkdir -p /var/secrets
 
-# Install supervisord
-RUN apt-get update && apt-get install -y supervisor
+# Install supervisord, cron and logrotate
+RUN apt-get update && apt-get install -y supervisor cron logrotate
+
+# Ensure postfix log directory exists and copy supervisord config
+RUN mkdir -p /var/log/postfix
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Add logrotate configuration for postfix logs
+COPY logrotate/postfix /etc/logrotate.d/postfix
+RUN chmod 644 /etc/logrotate.d/postfix
 
 EXPOSE ${SMTP_PORT}
 EXPOSE 587

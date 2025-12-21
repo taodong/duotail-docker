@@ -28,8 +28,8 @@ RUN cd /haraka-duotail && npm install
 # Copy duotail plugin to plugins directory
 RUN cp -r /haraka-duotail/node_modules/@tao.dong/haraka-plugin-duotail /haraka-duotail/plugins/duotail
 
-# Install supervisord
-RUN apt-get update && apt-get install -y supervisor
+# Install supervisord, cron and logrotate
+RUN apt-get update && apt-get install -y supervisor cron logrotate
 
 EXPOSE ${LISTEN_PORT}
 EXPOSE 8080
@@ -42,6 +42,12 @@ RUN chmod +x /healthcheck.sh
 
 # Add health check endpoint
 COPY health_server.js /health_server.js
+
+# Add logrotate configuration for haraka logs
+COPY logrotate/haraka /etc/logrotate.d/haraka
+RUN chmod 644 /etc/logrotate.d/haraka
+
+# Add health check endpoint
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
   CMD curl -f http://localhost:8080/health || exit 1
 
