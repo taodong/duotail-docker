@@ -20,7 +20,7 @@ COPY package.json /haraka-duotail/package.json
 COPY config/plugins /haraka-duotail/config/plugins
 COPY config/smtp.ini /haraka-duotail/config/smtp.ini
 COPY config/host_list /haraka-duotail/config/host_list
-
+COPY config/limit.ini /haraka-duotail/config/limit.ini
 
 # Install dependencies
 RUN cd /haraka-duotail && npm install
