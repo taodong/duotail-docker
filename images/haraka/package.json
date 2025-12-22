@@ -7,6 +7,6 @@
     "haraka-plugin-mailauth": "^1.0.2",
     "hazelcast-client": "^5.3.0",
     "kafkajs": "^2.2.4",
-    "@tao.dong/haraka-plugin-duotail": "^1.0.1"
+    "@tao.dong/haraka-plugin-duotail": "^1.0.2"
   }
 }
