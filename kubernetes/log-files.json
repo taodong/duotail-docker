@@ -2,7 +2,7 @@
   "output-folder": "target/logs",
   "logs": [
     {
-      "download": true,
+      "download": false,
       "name": "collector",
       "pod-selector": "collector-",
       "namespace": "default",
