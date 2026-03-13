@@ -19,7 +19,7 @@ if [[ -z "$DOMAIN" ]]; then
   exit 1
 fi
 
-CRON_LINE="0 3 * * * /root/.acme.sh/acme.sh --renew -d ${DOMAIN} && /opt/bin/certs-renew.sh"
+CRON_LINE="0 3 * * * /root/.acme.sh/acme.sh --renew -d ${DOMAIN} && /opt/bin/certs-renew.sh >> /var/log/certs-renew.log 2>&1"
 
 # Read existing crontab (may be empty)
 EXISTING="$(crontab -l 2>/dev/null || true)"
