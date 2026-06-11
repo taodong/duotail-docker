@@ -19,7 +19,11 @@ if [[ -z "$DOMAIN" ]]; then
   exit 1
 fi
 
-CRON_LINE="0 3 * * * /root/.acme.sh/acme.sh --renew -d ${DOMAIN} && /opt/bin/certs-renew.sh >> /var/log/certs-renew.log 2>&1"
+# Brace group ensures the redirection applies to BOTH commands, not just
+# certs-renew.sh. Without the braces, acme.sh's output is unredirected and
+# cron tries (and fails) to mail it -> "No MTA installed, discarding output".
+# The trailing space + semicolon before } are required by bash syntax.
+CRON_LINE="0 3 * * * { /root/.acme.sh/acme.sh --renew -d ${DOMAIN} && /opt/bin/certs-renew.sh ; } >> /var/log/certs-renew.log 2>&1"
 
 # Read existing crontab (may be empty)
 EXISTING="$(crontab -l 2>/dev/null || true)"
