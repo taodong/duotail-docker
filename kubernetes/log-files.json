@@ -9,14 +9,14 @@
       "files": ["/var/log/collector/app.log"]
     },
     {
-      "download": true,
+      "download": false,
       "name": "manager",
       "pod-selector": "manager-",
       "namespace": "default",
       "files": ["/var/log/manager/app.log"]
     },
     {
-      "download": false,
+      "download": true,
       "name": "haraka",
       "pod-selector": "haraka-",
       "namespace": "default",

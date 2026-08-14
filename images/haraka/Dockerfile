@@ -1,6 +1,6 @@
-FROM node:23.8.0
+FROM node:26.7.0
 
-ARG HARAKA_VERSION=3.0.5
+ARG HARAKA_VERSION=3.3.3
 ARG LISTEN_PORT=25
 
 # Set environment variable
