@@ -25,6 +25,18 @@ COPY config/host_list /haraka-duotail/config/host_list
 # Install dependencies
 RUN cd /haraka-duotail && npm install
 
+# PATCH: haraka-plugin-mailauth 1.1.1 predates Haraka 3.3's address API change.
+# Core now passes an @haraka/email-address Address whose `.address` is a getter,
+# not a method, so the plugin's `params[0].address()` throws in hook_mail and
+# SPF/DKIM never run. Upstream is unmaintained (1.1.1 is latest, ~1yr old).
+# The grep guards make the build FAIL LOUDLY if upstream ever changes this line,
+# rather than silently producing an image with no DKIM checking.
+# See mailauth-patch-instructions.md. Remove if upstream ships a Haraka 3.3 fix.
+RUN cd /haraka-duotail/node_modules/haraka-plugin-mailauth && \
+    grep -q 'const sender = params\[0\]\.address();' index.js && \
+    sed -i 's/const sender = params\[0\]\.address();/const sender = params[0].address;/' index.js && \
+    grep -q 'const sender = params\[0\]\.address;' index.js
+
 # Copy duotail plugin to plugins directory
 RUN cp -r /haraka-duotail/node_modules/@tao.dong/haraka-plugin-duotail /haraka-duotail/plugins/duotail
 
